@@ -16,14 +16,13 @@ import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
 
-@AllArgsConstructor
 @Data
 public class AttractionsDescriptionGetter {
-    private CompletableFuture<String> attractionsListJson;
+
     private JsonAPIParser parser;
 
 
-    public ArrayList<CompletableFuture<String>> getAttractions(){
+    public ArrayList<CompletableFuture<String>> getAttractions(CompletableFuture<String> attractionsListJson){
         AttractionsList attractionsList = parser.parseAttractionsList(attractionsListJson);
         HttpClient client = HttpClient.newHttpClient();
 

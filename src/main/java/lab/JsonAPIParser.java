@@ -2,6 +2,7 @@ package lab;
 
 import lab.attraction.AttractionsList;
 import lab.attractionsDescription.WikiInfo;
+import lab.location.LocationList;
 import lab.weather.Weather;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -9,29 +10,38 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class JsonAPIParser {
-    public AttractionsList parseAttractionsList(CompletableFuture<String> jsonString){
+    public static LocationList getLocations(CompletableFuture<String> jsonString){
+        CompletableFuture<String> str = jsonString;
         ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        AttractionsList attractionsList;
+
         try {
-            return attractionsList = mapper.readValue(jsonString.get(),  AttractionsList.class);
+            return mapper.readValue(str.get(),  LocationList.class);
         } catch (IOException | ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
-    public Weather parseWeather(CompletableFuture<String> jsonString){
+    public static AttractionsList parseAttractionsList(CompletableFuture<String> jsonString){
         ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        Weather weather;
         try {
-            return weather = mapper.readValue(jsonString.get(),  Weather.class);
+            return mapper.readValue(jsonString.get(),  AttractionsList.class);
         } catch (IOException | ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
-    public ArrayList<WikiInfo> parseDescription(ArrayList<CompletableFuture<String>> jsonList){
+    public static Weather parseWeather(CompletableFuture<String> jsonString){
+        ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        try {
+            return mapper.readValue(jsonString.get(),  Weather.class);
+        } catch (IOException | ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static ArrayList<WikiInfo> parseDescription(List<CompletableFuture<String>> jsonList){
         ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         ArrayList<WikiInfo> infoArrayList = new ArrayList<>();
         for (CompletableFuture<String> jsonString: jsonList){
