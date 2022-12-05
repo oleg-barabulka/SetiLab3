@@ -17,16 +17,19 @@ public class AttractionsFrame extends JFrame {
     public AttractionsFrame(CompletableFuture<String> attractionsString){
         super("Attractions chooser");
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        AttractionsList attractionsList = JsonAPIParser.parseAttractionsList(attractionsString);
-        AttractionsDescriptionGetter attractionsDescriptionGetter = new AttractionsDescriptionGetter();
-        List<CompletableFuture<String>> attractionDescriptionsList = attractionsDescriptionGetter.getAttractions(attractionsString);
+        this.setSize(500, 500);
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
         Runnable task = () -> {
+            AttractionsList attractionsList = null;
+            while (attractionsList == null) {
+                attractionsList = JsonAPIParser.parseAttractionsList(attractionsString);
+            }
+            AttractionsDescriptionGetter attractionsDescriptionGetter = new AttractionsDescriptionGetter();
+            List<CompletableFuture<String>> attractionDescriptionsList = attractionsDescriptionGetter.getAttractions(attractionsString);
             JScrollPane scrollPane = new JScrollPane(new DescriptionsPane(attractionsList, attractionDescriptionsList));
-            this.setSize(500, 500);
             this.add(scrollPane);
-            this.setLocationRelativeTo(null);
-            this.setVisible(true);
+            this.revalidate();
         };
         SwingUtilities.invokeLater(task);
     }
@@ -77,8 +80,8 @@ public class AttractionsFrame extends JFrame {
             iteration++;
             gbc.gridy++;
         }
-                gbc.gridy++;
-            }
+        gbc.gridy++;
+    }
 
         @Override
         public Dimension getPreferredScrollableViewportSize() {

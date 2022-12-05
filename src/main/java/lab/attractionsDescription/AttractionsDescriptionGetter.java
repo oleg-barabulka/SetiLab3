@@ -4,7 +4,6 @@ package lab.attractionsDescription;
 import lab.JsonAPIParser;
 import lab.attraction.Attraction;
 import lab.attraction.AttractionsList;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 
@@ -23,7 +22,7 @@ public class AttractionsDescriptionGetter {
 
 
     public ArrayList<CompletableFuture<String>> getAttractions(CompletableFuture<String> attractionsListJson){
-        AttractionsList attractionsList = parser.parseAttractionsList(attractionsListJson);
+        AttractionsList attractionsList = JsonAPIParser.parseAttractionsList(attractionsListJson);
         HttpClient client = HttpClient.newHttpClient();
 
         final String API_KEY = "5ae2e3f221c38a28845f05b649f966a6e6af076412fbb189dcf2a972";
